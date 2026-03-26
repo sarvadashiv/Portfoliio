@@ -1,13 +1,17 @@
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart';
+
+import 'url_opener_stub.dart' if (dart.library.html) 'url_opener_web.dart'
+    as url_opener;
 
 class Utils {
   static Future<void> launchURL(String link) async {
-    final url = Uri(scheme: 'https', path: link);
+    final normalizedLink =
+        link.startsWith('http://') || link.startsWith('https://')
+            ? link
+            : 'https://$link';
 
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Could not Launch $url';
+    if (!await url_opener.openUrl(normalizedLink)) {
+      debugPrint('Could not launch $normalizedLink');
     }
   }
 }
