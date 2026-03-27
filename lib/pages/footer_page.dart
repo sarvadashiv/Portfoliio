@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../data/footer_items.dart';
+import '../models/footer_item.dart';
 import '../utils/constants.dart';
 import '../utils/screen_helper.dart';
 
@@ -55,44 +56,8 @@ class FooterPage extends StatelessWidget {
                               .map((footerItem) => SizedBox(
                                     height: 120,
                                     width: itemWidth,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(footerItem.iconPath,
-                                                width: 25),
-                                            const SizedBox(width: 15),
-                                            Text(
-                                              footerItem.title,
-                                              style: GoogleFonts.oswald(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: Colors.white),
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        RichText(
-                                          textAlign: TextAlign.start,
-                                          text: TextSpan(children: [
-                                            TextSpan(
-                                                text: '${footerItem.text1}\n',
-                                                style: const TextStyle(
-                                                    color: captionColor,
-                                                    height: 1.8)),
-                                            TextSpan(
-                                                text: '${footerItem.text2}\n',
-                                                style: const TextStyle(
-                                                    color: captionColor))
-                                          ]),
-                                        )
-                                      ],
+                                    child: _FooterItemCard(
+                                      footerItem: footerItem,
                                     ),
                                   ))
                               .toList(),
@@ -154,4 +119,48 @@ class FooterPage extends StatelessWidget {
               );
             })),
       );
+}
+
+class _FooterItemCard extends StatelessWidget {
+  const _FooterItemCard({required this.footerItem});
+
+  final FooterItem footerItem;
+
+  @override
+  Widget build(BuildContext context) {
+    final details = <String>[
+      footerItem.text1,
+      if (footerItem.text2 != null && footerItem.text2!.trim().isNotEmpty)
+        footerItem.text2!,
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(footerItem.iconPath, width: 25),
+            const SizedBox(width: 15),
+            Text(
+              footerItem.title,
+              style: GoogleFonts.oswald(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
+        const SizedBox(height: 15),
+        Text(
+          details.join('\n'),
+          style: const TextStyle(
+            color: captionColor,
+            height: 1.8,
+          ),
+        ),
+      ],
+    );
+  }
 }

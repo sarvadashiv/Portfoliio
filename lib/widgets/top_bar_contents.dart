@@ -1,29 +1,21 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shivansh_verma4/utils/constants.dart';
 import '../utils/globals.dart';
 import '../utils/screen_helper.dart';
 
-class TopBarContents extends StatefulWidget {
+class TopBarContents extends StatelessWidget {
   const TopBarContents(
       {super.key, required this.opacity, required this.onSectionSelected});
   final double opacity;
   final Future<void> Function(int index) onSectionSelected;
   @override
-  State<TopBarContents> createState() => _TopBarContentsState();
-}
-
-class _TopBarContentsState extends State<TopBarContents> {
-  @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
     final desktopHeader = PreferredSize(
-        preferredSize: Size(screenSize.width, 70),
+        preferredSize: const Size.fromHeight(70),
         child: DesktopTabBar(
-          widget: widget,
-          screenSize: screenSize,
-          onSectionSelected: widget.onSectionSelected,
+          opacity: opacity,
+          onSectionSelected: onSectionSelected,
         ));
     return ScreenHelper(
       desktop: desktopHeader,
@@ -35,12 +27,8 @@ class _TopBarContentsState extends State<TopBarContents> {
 
 class DesktopTabBar extends StatelessWidget {
   const DesktopTabBar(
-      {super.key,
-      required this.screenSize,
-      required this.widget,
-      required this.onSectionSelected});
-  final Size screenSize;
-  final TopBarContents widget;
+      {super.key, required this.opacity, required this.onSectionSelected});
+  final double opacity;
   final Future<void> Function(int index) onSectionSelected;
   InkWell menuItem({required int toPage, required String title}) {
     return InkWell(
@@ -56,7 +44,7 @@ class DesktopTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white.withOpacity(widget.opacity),
+      color: Colors.white.withValues(alpha: opacity),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
@@ -114,7 +102,7 @@ Widget buildMobileHeader() => SafeArea(
 
 class HeaderLogo extends StatelessWidget {
   HeaderLogo({super.key});
-  final style = GoogleFonts.oswald(
+  final TextStyle style = GoogleFonts.oswald(
       color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold);
   @override
   Widget build(BuildContext context) {

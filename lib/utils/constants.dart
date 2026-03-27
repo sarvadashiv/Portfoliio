@@ -8,7 +8,6 @@ const desktopMaxWidth = 1000.0;
 const tabletMaxWidth = 760.0;
 
 const name = 'Shivansh Verma';
-const profileImage = 'assets/profile.jpg';
 const resumeUrl =
     'https://drive.google.com/file/d/1_3tiYZLdiaPCaqTG39sIXi1tpznlC8pX/view';
 
@@ -29,8 +28,5 @@ const skill =
 const address = 'Uttar Pradesh';
 const country = 'India';
 const phone1 = '9648285979';
-const phone2 = '';
 const email1 = 'shivanshverma388@gmail.com';
-const email2 = '';
 const whatsApp1 = '9648285979';
-const whatsApp2 = '';

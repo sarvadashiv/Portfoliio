@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 
 import '../data/skill_list.dart';
 import '../utils/constants.dart';
 import '../utils/screen_helper.dart';
+import '../widgets/optimized_lottie_asset.dart';
 import '../widgets/section_container.dart';
 
 class SkillPage extends StatelessWidget {
@@ -19,9 +19,8 @@ class SkillPage extends StatelessWidget {
     );
   }
 
-  Widget _buildUi(double width, BuildContext context) => SectionContainer(
-      width: width,
-      child: const _SkillContent());
+  Widget _buildUi(double width, BuildContext context) =>
+      SectionContainer(width: width, child: const _SkillContent());
 }
 
 class _SkillContent extends StatelessWidget {
@@ -32,13 +31,10 @@ class _SkillContent extends StatelessWidget {
     final isMobile = ScreenHelper.isMobile(context);
 
     final skillsVisual = Center(
-      child: SizedBox(
+      child: OptimizedLottieAsset(
+        assetPath: 'assets/animation/skills.json',
         width: isMobile ? 260 : 420,
         height: isMobile ? 260 : 420,
-        child: Lottie.asset(
-          'assets/animation/skills.json',
-          fit: BoxFit.contain,
-        ),
       ),
     );
 

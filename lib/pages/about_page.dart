@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 
 import '../utils/constants.dart';
 import '../utils/screen_helper.dart';
+import '../widgets/optimized_lottie_asset.dart';
 import '../widgets/section_container.dart';
 
 class AboutPage extends StatelessWidget {
@@ -28,13 +28,10 @@ Widget _buildUi(double width, BuildContext context) {
   );
 
   final aboutVisual = Center(
-    child: SizedBox(
+    child: OptimizedLottieAsset(
+      assetPath: 'assets/animation/coder.json',
       width: isMobile ? 260 : 340,
       height: isMobile ? 260 : 340,
-      child: Lottie.asset(
-        'assets/animation/coder.json',
-        fit: BoxFit.contain,
-      ),
     ),
   );
 

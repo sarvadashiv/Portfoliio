@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shivansh_verma4/utils/constants.dart';
 
 import '../data/projects.dart';
+import '../models/project.dart';
 import '../utils/screen_helper.dart';
 import '../utils/utils.dart';
 import '../widgets/section_container.dart';
@@ -59,33 +60,9 @@ class ProjectsPage extends StatelessWidget {
                 children: projects
                     .map((project) => SizedBox(
                           width: cardWidth,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(project.image),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Text(
-                                project.description,
-                                maxLines: useTwoColumns ? 4 : null,
-                                overflow: useTwoColumns
-                                    ? TextOverflow.ellipsis
-                                    : null,
-                                style: const TextStyle(
-                                  color: captionColor,
-                                  fontSize: 20,
-                                  height: 1.5,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () =>
-                                    Utils.launchURL('github.com/sarvadashiv'),
-                                icon: const FaIcon(FontAwesomeIcons.github),
-                                color: Colors.white70,
-                                iconSize: 24,
-                              )
-                            ],
+                          child: _ProjectCard(
+                            project: project,
+                            useTwoColumns: useTwoColumns,
                           ),
                         ))
                     .toList(),
@@ -94,4 +71,45 @@ class ProjectsPage extends StatelessWidget {
           ],
         ),
       );
+}
+
+class _ProjectCard extends StatelessWidget {
+  const _ProjectCard({
+    required this.project,
+    required this.useTwoColumns,
+  });
+
+  final Project project;
+  final bool useTwoColumns;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RepaintBoundary(
+          child: Image.asset(project.image),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        Text(
+          project.description,
+          maxLines: useTwoColumns ? 4 : null,
+          overflow: useTwoColumns ? TextOverflow.ellipsis : null,
+          style: const TextStyle(
+            color: captionColor,
+            fontSize: 20,
+            height: 1.5,
+          ),
+        ),
+        IconButton(
+          onPressed: () => Utils.launchURL(project.gitLink),
+          icon: const FaIcon(FontAwesomeIcons.github),
+          color: Colors.white70,
+          iconSize: 24,
+        )
+      ],
+    );
+  }
 }

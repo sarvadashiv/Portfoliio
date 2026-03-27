@@ -1,10 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shivansh_verma4/utils/constants.dart';
 
 import '../utils/screen_helper.dart';
 import '../utils/utils.dart';
+import '../widgets/optimized_lottie_asset.dart';
 import '../widgets/section_container.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -107,20 +107,22 @@ class _WelcomePageState extends State<WelcomePage> {
                   SizedBox(
                     width: roleWidth,
                     height: animatedTextSize * 1.8,
-                    child: DefaultTextStyle(
-                      textAlign: TextAlign.left,
-                      style: animatedTextStyle,
-                      child: AnimatedTextKit(
-                        repeatForever: true,
-                        animatedTexts: roleTexts
-                            .map(
-                              (roleText) => RotateAnimatedText(
-                                roleText,
-                                alignment: Alignment.centerLeft,
-                                transitionHeight: animatedTextSize * 1.6,
-                              ),
-                            )
-                            .toList(),
+                    child: RepaintBoundary(
+                      child: DefaultTextStyle(
+                        textAlign: TextAlign.left,
+                        style: animatedTextStyle,
+                        child: AnimatedTextKit(
+                          repeatForever: true,
+                          animatedTexts: roleTexts
+                              .map(
+                                (roleText) => RotateAnimatedText(
+                                  roleText,
+                                  alignment: Alignment.centerLeft,
+                                  transitionHeight: animatedTextSize * 1.6,
+                                ),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ),
                   ),
@@ -148,19 +150,21 @@ class _WelcomePageState extends State<WelcomePage> {
               backgroundColor: Colors.transparent,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
             ),
-            child: IgnorePointer(
-              child: AnimatedTextKit(
-                repeatForever: true,
-                animatedTexts: [
-                  ColorizeAnimatedText(
-                    "Resume",
-                    textStyle: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: colorizeColors,
-                  )
-                ],
+            child: RepaintBoundary(
+              child: IgnorePointer(
+                child: AnimatedTextKit(
+                  repeatForever: true,
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      "Resume",
+                      textStyle: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      colors: colorizeColors,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -169,13 +173,10 @@ class _WelcomePageState extends State<WelcomePage> {
     );
 
     final heroVisual = Center(
-      child: SizedBox(
+      child: OptimizedLottieAsset(
+        assetPath: 'assets/animation/yoga.json',
         width: isMobile ? 260 : 360,
         height: isMobile ? 260 : 360,
-        child: Lottie.asset(
-          'assets/animation/yoga.json',
-          fit: BoxFit.contain,
-        ),
       ),
     );
 
