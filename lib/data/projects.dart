@@ -7,11 +7,6 @@ const List<Project> projects = [
     gitLink: 'https://github.com/sarvadashiv',
   ),
   Project(
-    description: 'e-Commerce App',
-    image: 'assets/shopping.jpg',
-    gitLink: 'https://github.com/sarvadashiv',
-  ),
-  Project(
     description: 'Quiz App (MindRoller)',
     image: 'assets/quiz.jpg',
     gitLink: 'https://github.com/sarvadashiv',

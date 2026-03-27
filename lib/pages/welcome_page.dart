@@ -24,7 +24,7 @@ class _WelcomePageState extends State<WelcomePage> {
   final List<String> roleTexts = const [
     'Passionate',
     'HardWorking',
-    'Software Dev',
+    'a Software Dev',
   ];
 
   double _measureMaxTextWidth(TextStyle style) {

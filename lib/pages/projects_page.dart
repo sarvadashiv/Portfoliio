@@ -37,7 +37,7 @@ class ProjectsPage extends StatelessWidget {
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 520),
               child: const Text(
-                'These are my best projects made in love, but you can explore more.',
+                'These are my best projects till date, made in love, stay tuned for new ones.',
                 style:
                     TextStyle(color: Colors.white, fontSize: 20, height: 1.5),
               ),
