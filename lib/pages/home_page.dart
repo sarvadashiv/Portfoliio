@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:flutter/rendering.dart';
 import 'package:shivansh_verma4/pages/projects_page.dart';
 import 'package:shivansh_verma4/pages/skill_page.dart';
 import 'package:shivansh_verma4/pages/welcome_page.dart';
@@ -18,7 +18,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Widget> pages= [
+  final ScrollController _scrollController = ScrollController();
+  final List<Widget> pages = const [
     WelcomePage(),
     AboutPage(),
     ProjectsPage(),
@@ -26,43 +27,78 @@ class _HomePageState extends State<HomePage> {
     SkillPage(),
     FooterPage()
   ];
-  final itemScrollController=ItemScrollController();
-  final pageController = PageController(initialPage: 0);
-  final itemPositionListener= ItemPositionsListener.create();
+  late final List<GlobalKey> sectionKeys =
+      List.generate(pages.length, (_) => GlobalKey());
+
+  Future<void> _scrollToSection(int index) async {
+    if (index < 0 || index >= sectionKeys.length) {
+      return;
+    }
+
+    final targetContext = sectionKeys[index].currentContext;
+    if (targetContext == null) {
+      return;
+    }
+
+    final renderObject = targetContext.findRenderObject();
+    if (renderObject == null) {
+      return;
+    }
+
+    final viewport = RenderAbstractViewport.of(renderObject);
+    final position = _scrollController.position;
+    if (viewport == null) {
+      return;
+    }
+
+    final targetOffset =
+        viewport.getOffsetToReveal(renderObject, 0).offset - 24;
+    final clampedOffset = targetOffset.clamp(
+      position.minScrollExtent,
+      position.maxScrollExtent,
+    );
+
+    await _scrollController.animateTo(
+      clampedOffset.toDouble(),
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
-  void dispose(){
-    pageController.dispose();
+  void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: Globals.scaffoldKey,
       appBar: PreferredSize(
-          preferredSize: const Size(100,100),
-          child: TopBarContents(
-            opacity: 0,
-            itemsScrollController: itemScrollController,
-          ),
+        preferredSize: const Size(100, 100),
+        child: TopBarContents(
+          opacity: 0,
+          onSectionSelected: _scrollToSection,
+        ),
       ),
-      endDrawer: DrawerWidget(itemController: itemScrollController),
+      endDrawer: DrawerWidget(onSectionSelected: _scrollToSection),
       body: Container(
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/back.jpeg'),
-            fit: BoxFit.cover
-          )
+            image: DecorationImage(
+                image: AssetImage('assets/back.jpeg'), fit: BoxFit.cover)),
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            children: [
+              for (var index = 0; index < pages.length; index++)
+                KeyedSubtree(
+                  key: sectionKeys[index],
+                  child: pages[index],
+                ),
+            ],
+          ),
         ),
-        child: ScrollablePositionedList.builder(
-          initialScrollIndex: 0,
-            shrinkWrap: true,
-            itemPositionsListener: itemPositionListener,
-            itemScrollController: itemScrollController,
-            itemCount: pages.length,
-            itemBuilder: (context,index){
-              final page= pages[index];
-              return page;
-            }),
       ),
     );
   }

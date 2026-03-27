@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 import '../data/skill_list.dart';
 import '../utils/constants.dart';
 import '../utils/screen_helper.dart';
+import '../widgets/section_container.dart';
+
 class SkillPage extends StatelessWidget {
   const SkillPage({super.key});
 
@@ -17,74 +18,122 @@ class SkillPage extends StatelessWidget {
       desktop: _buildUi(desktopMaxWidth, context),
     );
   }
-  Widget _buildUi(double width, BuildContext context)=>ResponsiveWrapper(
-      maxWidth: width,
-      minWidth: width,
-      child:Flex(
-          direction:ScreenHelper.isMobile(context)?Axis.vertical:Axis.horizontal,
-        children: [
-          Expanded(
-            flex: ScreenHelper.isMobile(context)?0:2,
-              child: Lottie.asset('assets/animation/skills.json',width: 500),
 
-          ),
-          const SizedBox(width: 40,),
-          Expanded(
-            flex: ScreenHelper.isMobile(context)?0:4,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('SKILLS',
-                  style: GoogleFonts.oswald(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 28,
-                    height: 1.3
+  Widget _buildUi(double width, BuildContext context) => SectionContainer(
+      width: width,
+      child: const _SkillContent());
+}
+
+class _SkillContent extends StatelessWidget {
+  const _SkillContent();
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = ScreenHelper.isMobile(context);
+
+    final skillsVisual = Center(
+      child: SizedBox(
+        width: isMobile ? 260 : 420,
+        height: isMobile ? 260 : 420,
+        child: Lottie.asset(
+          'assets/animation/skills.json',
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+
+    final skillsContent = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'SKILLS',
+          style: GoogleFonts.oswald(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+              fontSize: 28,
+              height: 1.3),
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          skill,
+          style: TextStyle(fontSize: 20, color: captionColor, height: 1.5),
+        ),
+        const SizedBox(height: 24),
+        Column(
+          children: skills
+              .map(
+                (skill) => Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 110,
+                        child: Text(
+                          skill.skill,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(999),
+                          child: SizedBox(
+                            height: 10,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Container(color: Colors.white24),
+                                FractionallySizedBox(
+                                  alignment: Alignment.centerLeft,
+                                  widthFactor: skill.percentage / 100,
+                                  child: Container(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      SizedBox(
+                        width: 44,
+                        child: Text(
+                          '${skill.percentage}%',
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
+                        ),
+                      )
+                    ],
                   ),
-                  ),
-                  const SizedBox(height: 12,),
-                  const Text(
-                    skill,
-                    style: TextStyle(fontSize: 20,color: captionColor),
-                  ),
-                  const SizedBox(height: 16),
-                  Column(
-                    children: skills
-                        .map(
-                            (skill)=> Container(
-                              margin: EdgeInsets.only(bottom: 16),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: skill.percentage,
-                                      child: Container(
-                                        padding: EdgeInsets.only(left: 12),
-                                        alignment: Alignment.centerLeft,
-                                        height: 38,
-                                        color: Colors.white,
-                                        child: Text(skill.skill),
-                                      )
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    flex: 100-skill.percentage,
-                                      child: const Divider(color: Colors.white),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    '${skill.percentage}%',
-                                    style: const TextStyle(
-                                      color: Colors.white,fontSize: 16
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )).toList()
-                  )
-                ],
+                ),
               )
+              .toList(),
+        ),
+      ],
+    );
+
+    return isMobile
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              skillsVisual,
+              const SizedBox(height: 24),
+              skillsContent,
+            ],
           )
-        ],
-      ));
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(child: skillsVisual),
+              const SizedBox(width: 40),
+              Expanded(flex: 2, child: skillsContent),
+            ],
+          );
+  }
 }

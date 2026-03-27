@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:responsive_framework/responsive_wrapper.dart';
 
 import '../utils/constants.dart';
 import '../utils/screen_helper.dart';
+import '../widgets/section_container.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -19,41 +19,62 @@ class AboutPage extends StatelessWidget {
   }
 }
 
-Widget _buildUi(double width, BuildContext context) => SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: Center(
-        child: LayoutBuilder(builder: (context, constraints) {
-          final style = GoogleFonts.oswald(
-              color: Colors.white, fontSize: 20, height: 1.3);
-          return ResponsiveWrapper(
-            maxWidth: width,
-            minWidth: width,
-            child: Flex(
-              direction: ScreenHelper.isMobile(context)
-                  ? Axis.vertical
-                  : Axis.horizontal,
-              children: [
-                Expanded(
-                    flex: ScreenHelper.isMobile(context) ? 0 : 3,
-                    child: Lottie.asset('assets/animation/coder.json',
-                        width: 300)),
-                const SizedBox(width: 40),
-                Expanded(
-                    flex: ScreenHelper.isMobile(context) ? 0 : 4,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          aboutFirst,
-                          style: style,
-                        ),
-                        Text(aboutSecond, style: style),
-                        const SizedBox(height: 5)
-                      ],
-                    )),
-              ],
-            ),
-          );
-        }),
+Widget _buildUi(double width, BuildContext context) {
+  final isMobile = ScreenHelper.isMobile(context);
+  final style = GoogleFonts.oswald(
+    color: Colors.white,
+    fontSize: isMobile ? 18 : 20,
+    height: 1.4,
+  );
+
+  final aboutVisual = Center(
+    child: SizedBox(
+      width: isMobile ? 260 : 340,
+      height: isMobile ? 260 : 340,
+      child: Lottie.asset(
+        'assets/animation/coder.json',
+        fit: BoxFit.contain,
       ),
-    );
+    ),
+  );
+
+  final aboutContent = Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'MYSELF',
+        style: GoogleFonts.oswald(
+          color: Colors.white,
+          fontSize: 30,
+          fontWeight: FontWeight.w900,
+          height: 1.3,
+        ),
+      ),
+      const SizedBox(height: 16),
+      Text(aboutFirst, style: style),
+      Text(aboutSecond, style: style),
+    ],
+  );
+
+  return SectionContainer(
+    width: width,
+    child: isMobile
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              aboutVisual,
+              const SizedBox(height: 24),
+              aboutContent,
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(child: aboutVisual),
+              const SizedBox(width: 40),
+              Expanded(child: aboutContent),
+            ],
+          ),
+  );
+}
